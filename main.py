@@ -28,13 +28,13 @@ def read_root():
 @app.post("/ask")
 def ask_gpt(chat: ChatRequest):
     try:
-        response = openai.ChatCompletion.create(
+        response = openai.chat.completions.create(  # ✅ This is correct v1.x.x syntax
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": chat.message}
             ]
         )
-        return {"response": response.choices[0].message["content"]}
+        return {"response": response.choices[0].message.content}
     except Exception as e:
         return {"error": str(e)}
