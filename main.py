@@ -6,15 +6,14 @@ import openai
 from dotenv import load_dotenv
 
 load_dotenv()
-
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 app = FastAPI()
 
-# CORS
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # You can restrict this later
+    allow_origins=["*"],  # Adjust for production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -27,7 +26,7 @@ class ChatRequest(BaseModel):
 def read_root():
     return {"message": "Your AI chatbot backend is live!"}
 
-@app.post("/ask")  # <- Make sure this is POST, not GET
+@app.post("/ask")
 def ask_gpt(chat: ChatRequest):
     try:
         response = openai.ChatCompletion.create(
@@ -37,6 +36,6 @@ def ask_gpt(chat: ChatRequest):
                 {"role": "user", "content": chat.message}
             ]
         )
-        return {"response": response["choices"][0]["message"]["content"]}
+        return {"response": response.choices[0].message["content"]}
     except Exception as e:
         return {"error": str(e)}
