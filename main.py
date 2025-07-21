@@ -6,14 +6,14 @@ import openai
 from dotenv import load_dotenv
 
 load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+openai.api_key = os.getenv("OPENAI_API_KEY")  # ✅ Set the API key directly
 
 app = FastAPI()
 
 # ✅ CORS Setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Or restrict to ["http://localhost:5173"]
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -29,7 +29,7 @@ def read_root():
 @app.post("/ask")
 def ask_gpt(chat: ChatRequest):
     try:
-        response = client.chat.completions.create(
+        response = openai.ChatCompletion.create(  # ✅ Use openai directly
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
