@@ -5,11 +5,15 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import os
 
+# Load .env variables
 load_dotenv()
+
+# ✅ New-style OpenAI client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app = FastAPI()
 
+# CORS middleware setup
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,6 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Request schema
 class ChatRequest(BaseModel):
     message: str
 
