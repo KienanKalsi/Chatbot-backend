@@ -1,12 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import os
-import openai
+from openai import OpenAI
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app = FastAPI()
 
@@ -28,7 +28,7 @@ def read_root():
 @app.post("/ask")
 def ask_gpt(chat: ChatRequest):
     try:
-        response = openai.chat.completions.create(  # ✅ This is correct v1.x.x syntax
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
